@@ -1,15 +1,21 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+    fun getListOfCaloriesSums(input: List<String>): List<Int> {
+        var separator = 0
+        return input.map { if (it == "") 0 else it.toInt() }
+            .groupBy {
+                if (it == 0) separator += 1
+                separator
+            }
+            .values
+            .flatMap { listOf(it.sum()) }
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    fun part1(input: List<String>): Int  = getListOfCaloriesSums(input).max()
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    fun part2(input: List<String>): Int  = getListOfCaloriesSums(input)
+        .sorted()
+        .takeLast(3)
+        .sum()
 
     val input = readInput("Day01")
     println(part1(input))
