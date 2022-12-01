@@ -1,5 +1,5 @@
 fun main() {
-    fun getListOfCaloriesSums(input: List<String>): List<Int> {
+    fun getListOfCaloriesSum(input: List<String>): List<Int> {
         var separator = 0
         return input.map { if (it == "") 0 else it.toInt() }
             .groupBy {
@@ -10,9 +10,9 @@ fun main() {
             .flatMap { listOf(it.sum()) }
     }
 
-    fun part1(input: List<String>): Int  = getListOfCaloriesSums(input).max()
+    fun part1(input: List<String>): Int  = getListOfCaloriesSum(input).max()
 
-    fun part2(input: List<String>): Int  = getListOfCaloriesSums(input)
+    fun part2(input: List<String>): Int  = getListOfCaloriesSum(input)
         .sorted()
         .takeLast(3)
         .sum()
