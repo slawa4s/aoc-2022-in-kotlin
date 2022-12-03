@@ -3,8 +3,7 @@ const val CHUNK_SIZE = 3
 fun main() {
     fun setOfCharsToSumInt(set: Set<Char>) =
         set.sumOf {
-            if (it.isUpperCase()) Character.getNumericValue(it) + 17
-            else Character.getNumericValue(it) - 9
+            Character.getNumericValue(it) + if (it.isUpperCase()) 17 else -9
         }
 
     fun getChunkToInt(input: List<Set<Char>>): Int =
