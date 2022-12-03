@@ -9,9 +9,10 @@ fun main() {
     fun getChunkToInt(input: List<Set<Char>>): Int =
         setOfCharsToSumInt(input.reduce { first, second -> first.intersect(second) }.toSet())
 
-    fun part1(input: List<String>): Int  = input.sumOf {
-        getChunkToInt(listOf(it.take((it.length + 1) / 2).toSet(), it.takeLast((it.length + 1) / 2).toSet()))
-    }
+    fun part1(input: List<String>): Int  = input
+        .sumOf {
+            getChunkToInt(listOf(it.take((it.length + 1) / 2).toSet(), it.takeLast((it.length + 1) / 2).toSet()))
+        }
 
     fun part2(input: List<String>): Int  = input
         .map { it.toSet() }
