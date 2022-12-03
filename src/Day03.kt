@@ -15,9 +15,9 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int  = input
-        .map { it.toList() }
+        .map { it.toSet() }
         .chunked(CHUNK_SIZE)
-        .sumOf { getChunkToInt(it.map { item -> item.toSet() }) }
+        .sumOf { getChunkToInt(it) }
 
     val input = readInput("Day03")
     println(part1(input))
