@@ -1,5 +1,3 @@
-import java.io.IOException
-
 const val diskSpace = 70000000
 const val unusedSpace = 30000000
 const val maxDirectorySize = 100000
@@ -33,19 +31,15 @@ fun main() {
 }
 
 class FolderTreeImpl {
-    var treeRoot: FolderNode = FolderNode(null)
-    var currentRoot: FolderNode = treeRoot
+    private var treeRoot: FolderNode = FolderNode(null)
+    private var currentRoot: FolderNode = treeRoot
 
     fun go(folderName: String) {
-//        println("Go from ${currentRoot.name} to ${folderName}")
-        currentRoot =
-            if (folderName == "/") treeRoot
-            else if (folderName == "..") currentRoot.dad ?: treeRoot
-            else {
-                if (folderName in currentRoot.folders) currentRoot.folders[folderName]!! else {
-                    throw IOException("Didn't find ${folderName} in ${currentRoot.name}")
-                }
-            }
+        currentRoot = when (folderName) {
+            "/" -> treeRoot
+            ".." -> currentRoot.dad ?: treeRoot
+            else -> currentRoot.getSubFolderByName(folderName)
+        }
     }
 
     fun readDir(input: List<String>) = input.forEach {
@@ -65,11 +59,10 @@ class FolderTreeImpl {
 
 class FolderNode(
     val dad: FolderNode?,
-    val name: String = "/",
-    var fromFileNameToFileSize: MutableMap<String, Int> = mutableMapOf(),
-    var folders: MutableMap<String, FolderNode> = mutableMapOf(),
+    private var fromFileNameToFileSize: MutableMap<String, Int> = mutableMapOf(),
+    private var folders: MutableMap<String, FolderNode> = mutableMapOf(),
 ) {
-    val size: Int
+    private val sizeOfFiles: Int
         get() = fromFileNameToFileSize.values.sum()
 
     fun appendFile(fileName: String, size: Int) {
@@ -77,20 +70,14 @@ class FolderNode(
     }
 
     fun appendFolder(folderName: String) {
-        folders[folderName] = FolderNode(this, folderName)
+        folders[folderName] = FolderNode(this)
     }
 
-    private fun <T> concatenate(lists: List<List<T>>): MutableList<T> {
-        val collection: MutableList<T> = mutableListOf()
-        for (list in lists) {
-            collection.addAll(list)
-        }
-        return collection
-    }
+    fun getSubFolderByName(folderName: String): FolderNode = this.folders[folderName]!!
 
-    private fun getAllNodesSizeFold(): List<Pair<Int, Int>> {
-        val allKids = concatenate(folders.values.map { it.getAllNodesSizeFold() })
-        allKids.add(Pair(allKids.sumOf { it.second } + size, size))
+    private fun getAllNodesSizeFold(): MutableList<Pair<Int, Int>> {
+        val allKids = folders.values.map { it.getAllNodesSizeFold() }.flatten().toMutableList()
+        allKids.add(Pair(allKids.sumOf { it.second } + sizeOfFiles, sizeOfFiles))
         return allKids
     }
 
