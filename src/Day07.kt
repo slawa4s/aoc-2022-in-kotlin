@@ -70,7 +70,7 @@ class FolderNode(
     var folders: MutableMap<String, FolderNode> = mutableMapOf(),
 ) {
     val size: Int
-        get() = fromFileNameToFileSize.values.sum() + folders.values.sumOf { it.size }
+        get() = fromFileNameToFileSize.values.sum()
 
     fun appendFile(fileName: String, size: Int) {
         fromFileNameToFileSize[fileName] = size
@@ -80,19 +80,19 @@ class FolderNode(
         folders[folderName] = FolderNode(this, folderName)
     }
 
-    private fun <T> concatenate(sets: List<Set<T>>): MutableSet<T> {
-        val collection: MutableSet<T> = HashSet()
-        for (set in sets) {
-            collection.addAll(set)
+    private fun <T> concatenate(lists: List<List<T>>): MutableList<T> {
+        val collection: MutableList<T> = mutableListOf()
+        for (list in lists) {
+            collection.addAll(list)
         }
         return collection
     }
 
-    fun getAllNodes(): Set<FolderNode> {
-        val allKids = concatenate(folders.values.map { it.getAllNodes() })
-        allKids.add(this)
+    private fun getAllNodesSizeFold(): List<Pair<Int, Int>> {
+        val allKids = concatenate(folders.values.map { it.getAllNodesSizeFold() })
+        allKids.add(Pair(allKids.sumOf { it.second } + size, size))
         return allKids
     }
 
-    fun getAllNodesSize(): List<Int> = getAllNodes().map { it.size }
+    fun getAllNodesSize(): List<Int> = getAllNodesSizeFold().map { it.first }
 }
