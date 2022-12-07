@@ -2,6 +2,7 @@ import java.io.IOException
 
 const val diskSpace = 70000000
 const val unusedSpace = 30000000
+const val maxDirectorySize = 100000
 
 fun main() {
     fun getInputGroupedByOperations(input: List<String>): List<List<String>> {
@@ -52,12 +53,12 @@ class FolderTreeImpl {
         else currentRoot.appendFile(it.split(" ")[1], Integer.parseInt(it.split(" ")[0]))
     }
 
-    fun part1Answer(): Int = treeRoot.getAllNodes().sumOf { if (it.size <= 100000) it.size else 0  }
+    fun part1Answer(): Int = treeRoot.getAllNodesSize().sumOf { if (it <= maxDirectorySize) it else 0  }
 
     fun part2Answer(): Int {
-        val sortedListOfNodes = treeRoot.getAllNodes().sortedBy { it.size }
-        val directorySize = sortedListOfNodes.last().size
-        return sortedListOfNodes.first { diskSpace - directorySize + it.size >= unusedSpace }.size
+        val sortedListOfNodes = treeRoot.getAllNodesSize().sorted()
+        val directorySize = sortedListOfNodes.last()
+        return sortedListOfNodes.first { diskSpace - directorySize + it >= unusedSpace }
     }
 }
 
@@ -92,4 +93,6 @@ class FolderNode(
         allKids.add(this)
         return allKids
     }
+
+    fun getAllNodesSize(): List<Int> = getAllNodes().map { it.size }
 }
