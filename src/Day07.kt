@@ -20,14 +20,10 @@ fun main() {
         return folderTree
     }
 
-    val inputGrouped = getInputGroupedByOperations(readInput("Day07"))
+    val initializedTree = initializeFolderTree(getInputGroupedByOperations(readInput("Day07")))
 
-    fun part1(inputGrouped: List<List<String>>): Int = initializeFolderTree(inputGrouped).part1Answer()
-
-    fun part2(inputGrouped: List<List<String>>): Int = initializeFolderTree(inputGrouped).part2Answer()
-    
-    println(part1(inputGrouped))
-    println(part2(inputGrouped))
+    println(initializedTree.part1Answer())
+    println(initializedTree.part2Answer())
 }
 
 class FolderTreeImpl {
