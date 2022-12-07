@@ -47,8 +47,7 @@ class FolderTreeImpl {
 
     fun part2Answer(): Int {
         val sortedListOfNodes = treeRoot.getAllNodesSize().sorted()
-        val directorySize = sortedListOfNodes.last()
-        return sortedListOfNodes.first { diskSpace - directorySize + it >= unusedSpace }
+        return sortedListOfNodes.first { diskSpace - sortedListOfNodes.last() + it >= unusedSpace }
     }
 }
 
